@@ -30,9 +30,9 @@ describe('ANCHORS', () => {
     expect(mg.corridors).toContain('usdc-brl');
   });
 
-  it('Cowrie is only in usdc-ngn', () => {
+  it('Cowrie is only in ngnt-ngn', () => {
     const cowrie = ANCHORS.find((a) => a.id === 'cowrie')!;
-    expect(cowrie.corridors).toEqual(['usdc-ngn']);
+    expect(cowrie.corridors).toEqual(['ngnt-ngn']);
   });
 
   it('Anclap covers usdc-ars and usdc-pen', () => {
@@ -97,13 +97,11 @@ describe('getAnchorById', () => {
 });
 
 describe('getAnchorsByCorridorId', () => {
-  it('returns MoneyGram, Cowrie, and NGNC for usdc-ngn', () => {
-    const anchors = getAnchorsByCorridorId('usdc-ngn');
+  it('returns Cowrie for ngnt-ngn', () => {
+    const anchors = getAnchorsByCorridorId('ngnt-ngn');
     const ids = anchors.map((a) => a.id);
-    expect(ids).toContain('moneygram');
     expect(ids).toContain('cowrie');
-    expect(ids).toContain('ngnc');
-    expect(ids).toHaveLength(3);
+    expect(ids).toHaveLength(1);
   });
 
   it('returns MoneyGram for usdc-kes', () => {
@@ -213,6 +211,6 @@ describe('getAnchorsByCorridorId excludes issuer-only anchors', () => {
     const results = getAnchorsByCorridorId('usdc-ngn');
     const ids = results.map((a) => a.id);
     expect(ids).toContain('moneygram');
-    expect(ids).toContain('cowrie');
+    expect(ids).not.toContain('cowrie');
   });
 });

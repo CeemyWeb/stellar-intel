@@ -61,7 +61,7 @@ function outcomeRow(
 ): OutcomeLogRow {
   return {
     anchorId: 'moneygram',
-    corridor: 'usdc-ngn',
+    corridor: 'ngnt-ngn',
     quotedRate: '1500',
     deliveredRate: '1500',
     quotedAmount: '100',
@@ -254,19 +254,19 @@ describe('GET /api/reputation/leaderboard — no corridor filter', () => {
 
 describe('GET /api/reputation/leaderboard — with corridor filter', () => {
   it('returns 200 for a valid corridor', async () => {
-    const res = await GET(makeRequest({ corridor: 'usdc-ngn' }));
+    const res = await GET(makeRequest({ corridor: 'ngnt-ngn' }));
     expect(res.status).toBe(200);
   });
 
   it('echoes the corridor in the response body', async () => {
-    const data = await leaderboardFor({ corridor: 'usdc-ngn' });
-    expect(data.corridor).toBe('usdc-ngn');
+    const data = await leaderboardFor({ corridor: 'ngnt-ngn' });
+    expect(data.corridor).toBe('ngnt-ngn');
   });
 
   it('only returns anchors that serve the requested corridor', async () => {
-    const ids = idsOf(await leaderboardFor({ corridor: 'usdc-ngn' }));
+    const ids = idsOf(await leaderboardFor({ corridor: 'ngnt-ngn' }));
 
-    // moneygram, cowrie and ngnc all serve usdc-ngn; anclap does not.
+    // moneygram, cowrie and ngnc all serve ngnt-ngn; anclap does not.
     expect(ids).toContain('moneygram');
     expect(ids).toContain('cowrie');
     expect(ids).toContain('ngnc');

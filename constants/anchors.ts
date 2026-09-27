@@ -41,15 +41,17 @@ export const ANCHORS: Anchor[] = [
     seps: ['sep10', 'sep24'],
   },
   {
-    // SEP-6 programmatic withdraw — rates are indicative, not firm quotes
+    // Verified 2026-09-23: Cowrie's SEP-6 /info exposes NGNT (not USDC).
+// SEP-6 → NGNT corridor; SEP-31 → USDC→NGN.
     id: 'cowrie',
     name: 'Cowrie Exchange',
     homeDomain: 'cowrie.exchange',
     serviceDomain: 'api.cowrie.exchange',
-    corridors: ['usdc-ngn'],
-    seps: ['sep6', 'sep10'],
-    assetCode: 'USDC',
-    assetIssuer: USDC_ISSUER,
+    corridors: ['ngnt-ngn'],
+    sep31Corridors: ['usdc-ngn'],
+    seps: ['sep6', 'sep10', 'sep31'],
+    assetCode: 'NGNT',
+    assetIssuer: 'GAWODAROMJ33V5YDFY3NPYTHVYQG7MJXVJ2ND3AOGIHYRWINES6ACCPD',
   },
   {
     id: 'anclap',
@@ -140,6 +142,14 @@ export const CORRIDORS: Corridor[] = [
     to: 'NGN',
     countryCode: 'NG',
     countryName: 'Nigeria',
+  },
+  {
+    id: 'ngnt-ngn',
+    from: 'NGNT',
+    to: 'NGN',
+    countryCode: 'NG',
+    countryName: 'Nigeria',
+    fromPeg: 'NGN',
   },
   {
     id: 'usdc-kes',
@@ -253,6 +263,7 @@ export const TYPICAL_AMOUNTS: Record<string, number[]> = {
   'brl-brl': [100, 250, 500],
   'usdc-zar': [50, 150, 300],
   'usdc-xof': [50, 100, 200],
+  'ngnt-ngn': [50000, 100000, 200000],
 };
 
 /** Corridor IDs that at least one anchor in the registry currently serves. */

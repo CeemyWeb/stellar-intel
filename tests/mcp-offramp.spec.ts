@@ -32,7 +32,7 @@ vi.mock('@stellar/stellar-sdk', async (importOriginal) => {
 // and deterministic, while still exercising the real plumbing between them.
 const LIVE_RATES: Record<string, { anchorId: string; totalReceived: (amount: number) => number }> =
   {
-    'usdc-ngn': { anchorId: 'cowrie', totalReceived: (amount) => (amount - 2) * 1600 },
+    'ngnt-ngn': { anchorId: 'cowrie', totalReceived: (amount) => (amount - 2) * 1600 },
     'usdc-kes': { anchorId: 'moneygram', totalReceived: (amount) => (amount - 1.5) * 129 },
   };
 
@@ -76,7 +76,7 @@ vi.mock('@/lib/stellar/server-rates', () => ({
 
 // Routing resolves each corridor against the registry filtered to anchors with
 // a verified account in ANCHOR_PAYMENT_ACCOUNTS — there is no built-in table.
-// Only cowrie is configured by default, so usdc-ngn routes to it even though
+// Only cowrie is configured by default, so ngnt-ngn routes to it even though
 // moneygram is listed first in the registry.
 const COWRIE_ACCOUNT = Keypair.random().publicKey();
 const MONEYGRAM_ACCOUNT = Keypair.random().publicKey();
@@ -148,8 +148,8 @@ describe('intel.offramp.quote (#135)', () => {
   });
 
   it('derives corridor ids case-insensitively', () => {
-    expect(corridorId('USDC', 'NGN')).toBe('usdc-ngn');
-    expect(corridorId('usdc', 'ngn')).toBe('usdc-ngn');
+    expect(corridorId('USDC', 'NGN')).toBe('ngnt-ngn');
+    expect(corridorId('usdc', 'ngn')).toBe('ngnt-ngn');
   });
 });
 
@@ -263,7 +263,7 @@ describe('intel.execute (#819)', () => {
       status: 'submitted',
       hash: 'a'.repeat(64),
       ledger: 12345,
-      corridorId: 'usdc-ngn',
+      corridorId: 'ngnt-ngn',
       anchorId: 'cowrie',
     });
     expect(submitTransaction).toHaveBeenCalledTimes(1);

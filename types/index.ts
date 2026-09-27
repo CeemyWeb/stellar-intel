@@ -21,6 +21,8 @@ export interface Anchor {
   serviceDomain?: string;
   /** Known SEP protocol support flags for this anchor. */
   seps?: Array<'sep6' | 'sep10' | 'sep24' | 'sep31' | 'sep38'>;
+  /** SEP-31 only corridors, e.g. USDC→NGN for Cowrie. */
+  sep31Corridors?: string[];
   /** Structured operator-supplied metadata, as collected by the anchor onboarding template. */
   metadata?: AnchorMetadata;
 }
@@ -48,6 +50,8 @@ export interface Corridor {
   to: string; // fiat currency code, e.g. 'NGN'
   countryCode: string; // ISO 3166-1 alpha-2
   countryName: string;
+  /** Peg from the 'from' asset to the 'to' fiat, when applicable. */
+  fromPeg?: string;
 }
 
 // ─── Rate comparison ──────────────────────────────────────────────────────────

@@ -149,7 +149,7 @@ describe('MCP off-ramp routing via the anchor resolver', () => {
 
     const { unsignedTx } = await prepareIntent(intentFor(kp.publicKey()));
 
-    expect(routingTargetsForCorridor).toHaveBeenCalledWith('usdc-ngn');
+    expect(routingTargetsForCorridor).toHaveBeenCalledWith('ngnt-ngn');
     const tx = TransactionBuilder.fromXDR(unsignedTx, Networks.PUBLIC);
     expect('operations' in tx && tx.operations).toHaveLength(1);
     const op = (tx as { operations: Array<{ type: string; destination?: string }> }).operations[0];
@@ -236,7 +236,7 @@ describe('MCP off-ramp routing via the anchor resolver', () => {
 
     await expect(
       executeIntent({ unsignedEnvelope, signature, signedTx: tx.toXDR() })
-    ).resolves.toMatchObject({ corridorId: 'usdc-ngn', anchorId: 'cowrie' });
+    ).resolves.toMatchObject({ corridorId: 'ngnt-ngn', anchorId: 'cowrie' });
     expect(submitTransaction).toHaveBeenCalledTimes(1);
   });
 });
