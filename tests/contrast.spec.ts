@@ -2,6 +2,8 @@ import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
+import { contrastRatio, relativeLuminance } from '../src/theme/contrastUtils';
+
 /**
  * WCAG 2.1 AA contrast guard (#755).
  *
@@ -24,24 +26,6 @@ const THRESHOLD = {
   /** WCAG 1.4.11 — UI components and meaningful graphics. */
   nonText: 3,
 } as const;
-
-function srgbToLinear(channel: number): number {
-  const c = channel / 255;
-  return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
-}
-
-function relativeLuminance(hex: string): number {
-  const value = hex.replace('#', '');
-  const channel = (offset: number) => srgbToLinear(parseInt(value.slice(offset, offset + 2), 16));
-  return 0.2126 * channel(0) + 0.7152 * channel(2) + 0.0722 * channel(4);
-}
-
-export function contrastRatio(foreground: string, background: string): number {
-  const a = relativeLuminance(foreground);
-  const b = relativeLuminance(background);
-  const [lighter, darker] = a >= b ? [a, b] : [b, a];
-  return (lighter + 0.05) / (darker + 0.05);
-}
 
 /**
  * Reads the token values straight out of `globals.css` rather than duplicating
@@ -280,4 +264,25 @@ describe('contrastRatio', () => {
       10
     );
   });
+});
+
+it('composites alpha channels for light themes', () => {
+  // Semi-transparent black on white background (light theme)
+  // After alpha compositing: fg luminance = 0.5 * 0 + 0.5 * 1 = 0.5
+  // Contrast ratio: (1 + 0.05) / (0.5 + 0.05) = 1.05 / 0.55 ≈ 1.91:1
+  expect(contrastRatio('rgba(0,0,0,0.5)', '#ffffff')).toBeCloseTo(1.91, 2);
+});
+
+it('composites alpha channels for dark themes', () => {
+  // Semi-transparent white on black background (dark theme)
+  // After alpha compositing: fg luminance = 0.5 * 1 + 0.5 * 1 = 1 (white at 50% is still white)
+  // Contrast ratio: (1 + 0.05) / (0 + 0.05) = 1.05 / 0.05 = 21:1
+  expect(contrastRatio('rgba(255,255,255,0.5)', '#000000')).toBeCloseTo(21, 2);
+});
+
+it('composites alpha channels for custom themes', () => {
+  // Custom semi-transparent gray on mid-gray background
+  // After alpha compositing: fg luminance ≈ 0.615, bg luminance ≈ 0.229
+  // Contrast ratio: (0.615 + 0.05) / (0.229 + 0.05) ≈ 2.47:1
+  expect(contrastRatio('rgba(128,128,128,0.5)', '#808080')).toBeCloseTo(2.47, 2);
 });
