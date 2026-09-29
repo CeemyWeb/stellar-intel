@@ -70,6 +70,9 @@ jobs:
       - name: Unit tests (vitest)
         run: npm run test -- --reporter=default --coverage
 
+      - name: Check locales (enforcing)
+        run: npm run check:locales
+
       - name: Upload coverage to Codecov
         if: matrix.node == '20'
         uses: codecov/codecov-action@v7

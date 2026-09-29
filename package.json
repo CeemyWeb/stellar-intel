@@ -22,6 +22,8 @@
     "test:live": "vitest run --project live-anchors",
     "test:watch": "vitest --watch --project unit",
     "test:coverage": "vitest --coverage --project unit",
+    "check:locales": "npx vitest run --project unit tests/locale-check.spec.ts --reporter=verbose",
+
     "check:registry": "node ./scripts/check-registry.mjs",
     "validate:anchors": "node ./scripts/validate-anchors.mjs",
     "emit-version": "node ./scripts/emit-version.js",
