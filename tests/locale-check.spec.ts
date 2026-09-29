@@ -22,17 +22,23 @@ describe('locale enforcement checker (#1713)', () => {
   });
 
   it('enforcing check mechanism runs without crashing', () => {
-    // The assertLocalesEnforcing function should execute and either
-    // pass (if all keys are present) or throw (enforcing behavior)
-    // Both outcomes are valid - the important thing is the mechanism works
     expect.hasAssertions();
     try {
       assertLocalesEnforcing();
-      // If no error thrown, keys are complete - valid outcome
       expect(true).toBe(true);
     } catch (e) {
-      // Expected enforcing behavior - checker found issues
       expect(e).toBeInstanceOf(Error);
+    }
+  });
+
+  it('assertLocalesEnforcing throws on missing keys', () => {
+    expect.hasAssertions();
+    try {
+      assertLocalesEnforcing();
+      expect(true).toBe(false);
+    } catch (e) {
+      expect(e).toBeInstanceOf(Error);
+      expect((e as Error).message).toContain('missing translation key');
     }
   });
 });
